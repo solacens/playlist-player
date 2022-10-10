@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 
 import { RequestService } from 'src/app/request.service';
 
-import { PlaylistVideo } from 'src/app/interfaces';
+import { EmptyPlaylist, Playlist } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-player',
@@ -15,29 +15,36 @@ export class PlayerComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private titleService: Title, private request: RequestService) { }
 
-  title = "";
+  playlist: Playlist = EmptyPlaylist();
 
-  videoList: PlaylistVideo[] = [];
-
-  setDocTitle(title: string) {
-    this.titleService.setTitle(title);
+  updatePlaylist() {
+    const playlistId = this.playlist.details.id;
+    this.playlist = EmptyPlaylist();
+    this.request.getPlaylist(playlistId, true).subscribe((playlist: Playlist) => {
+      this.playlist = playlist;
+      this.titleService.setTitle(playlist.details.name);
+    });
   }
 
   isFirstPlaying() {
     return false;
   }
+
   isLastPlaying() {
     return true;
   }
+
   play() {
     return true;
   }
+
   pause() {
     return true;
   }
   previous() {
     return true;
   }
+
   next() {
     return true;
   }
@@ -46,9 +53,11 @@ export class PlayerComponent implements OnInit {
     const route = this.route.pathFromRoot
     route[route.length - 1].url.subscribe(url => {
       const playlistId = url[0].path
-      this.request.getPlaylistVideoList(playlistId).subscribe(list => {
-        this.videoList = list;
-      })
+      this.request.getPlaylist(playlistId).subscribe((playlist: Playlist) => {
+        this.playlist = playlist;
+        console.log(playlist);
+        this.titleService.setTitle(playlist.details.name);
+      });
     })
   }
 }

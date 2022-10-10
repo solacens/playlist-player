@@ -11,3 +11,22 @@ export interface PlaylistVideo {
   length: number,
   thumbnail: string
 }
+
+export interface Playlist {
+  details: PlaylistInfo,
+  videos: PlaylistVideo[]
+}
+
+function EmptyPlaylist(): Playlist {
+  const playlist: Playlist = {
+    details: {
+      name: "",
+      id: "",
+      author: ""
+    },
+    videos: []
+  };
+  return playlist;
+}
+
+export { EmptyPlaylist }

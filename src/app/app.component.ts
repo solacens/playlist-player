@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
   constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private configService: ConfigService) { }
 
   setDocTitle(title: string) {
-    console.log('current title:::::' + this.titleService.getTitle());
     this.titleService.setTitle(title);
   }
 
