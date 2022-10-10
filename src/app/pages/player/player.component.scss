@@ -1,0 +1,40 @@
+.video-list {
+  h3 {
+    margin-bottom: 0;
+  }
+
+  .img-container {
+    padding-right: 10px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      clip-path: inset(7px 7px 7px 7px);
+    }
+  }
+}
+
+.media-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+  .time-slider {
+    width: 100% !important;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .media-action-bar {
+    width: 100%;
+    padding: 2.5rem;
+    justify-content: center;
+
+    .mat-icon {
+      height: 48px !important;
+      width: 48px !important;
+      font-size: 48px !important;
+    }
+  }
+}

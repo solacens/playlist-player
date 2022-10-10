@@ -1,0 +1,31 @@
+<div class="container">
+  <mat-toolbar color="primary" class="top-menu">
+    <span class="pointer" [routerLink]="['']">Playlist Player</span>
+    <span class="flex-expand"></span>
+    <button mat-button (click)="openDialogAddPlaylist()" matTooltip="Add playlist">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-button *ngIf="config.isLightTheme" (click)="config.setDarkTheme()" matTooltip="Turn to dark theme">
+      <mat-icon>dark_mode</mat-icon>
+    </button>
+    <button mat-button *ngIf="config.isDarkTheme" (click)="config.setLightTheme()" matTooltip="Turn to light theme">
+      <mat-icon>light_mode</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div class="playlist">
+    <mat-list color="primary">
+      <h3 mat-subheader>Saved playlists</h3>
+      <mat-divider></mat-divider>
+      <mat-list-item class="pointer" *ngFor="let playlist of playlists; let i = index"
+        [routerLink]="['/' + playlist.id]">
+        <h3 mat-line><span class="stronger">{{ playlist.name }}</span></h3>
+        <h4 mat-line>from <span class="stronger">{{ playlist.author }}</span></h4>
+        <span class="flex-expand"></span>
+        <button mat-button (click)="deletePlaylist(playlist); $event.stopPropagation()">
+          <mat-icon class="danger">delete</mat-icon>
+        </button>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

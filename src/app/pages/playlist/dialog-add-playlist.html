@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+  <p>Playlist ID</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="playlistId">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="playlistId" cdkFocusInitial>OK</button>
+</div>
