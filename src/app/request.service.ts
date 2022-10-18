@@ -97,7 +97,6 @@ export class RequestService {
               const playlistVideo: PlaylistVideo = {
                 name: y.title,
                 id: y.videoId,
-                url: `https://${this.config.preferredSource}/embed/${y.videoId}`,
                 author: y.author,
                 length: y.lengthSeconds,
                 thumbnail: y.videoThumbnails.filter((z: any) => z.quality == 'default')[0].url
@@ -113,7 +112,6 @@ export class RequestService {
             const playlistVideo: PlaylistVideo = {
               name: raw.title,
               id: raw.videoId,
-              url: `https://${this.config.preferredSource}/embed/${raw.videoId}`,
               author: raw.author,
               length: raw.lengthSeconds,
               thumbnail: raw.videoThumbnails.filter((z: any) => z.quality == 'default')[0].url

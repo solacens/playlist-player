@@ -7,7 +7,6 @@ import { Base64 } from 'js-base64';
 @Injectable({
   providedIn: 'root'
 })
-
 export class ConfigService {
 
   private body = document.getElementsByTagName('body')[0];
@@ -60,6 +59,14 @@ export class ConfigService {
     LocalService.setPlaylistCache(id, value);
   }
 
+  get volume(): number {
+    return LocalService.volume
+  }
+
+  set volume(value: number) {
+    LocalService.volume = value;
+  }
+
   init(): void {
     // Body theme class
     this.body.classList.add(LocalService.theme);
@@ -103,6 +110,18 @@ class LocalService {
 
   static setPlaylistCache(playlistId: string, value: Playlist) {
     localStorage.setItem(`${playlistId}`, Base64.encode(JSON.stringify(value)));
+  }
+
+  static get volume(): number {
+    if (!localStorage.getItem('volume')) {
+      this.volume = 0.25
+    }
+    const volume: number = parseFloat(localStorage.getItem('volume') ?? "0.25");
+    return volume;
+  }
+
+  static set volume(value: number) {
+    localStorage.setItem('volume', `${value}`);
   }
 
 }

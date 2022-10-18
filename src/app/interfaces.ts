@@ -7,7 +7,6 @@ export interface PlaylistInfo {
 export interface PlaylistVideo {
   name: string,
   id: string,
-  url: string,
   author: string,
   length: number,
   thumbnail: string
@@ -27,8 +26,6 @@ export interface PlayState {
 
 export interface StreamState {
   playing: boolean;
-  readableCurrentTime: string;
-  readableDuration: string;
   duration: number | undefined;
   currentTime: number | undefined;
   volume: number;
@@ -61,8 +58,6 @@ function NewPlayState(): PlayState {
 function EmptyStreamState(): StreamState {
   return {
     playing: false,
-    readableCurrentTime: "",
-    readableDuration: "",
     duration: undefined,
     currentTime: 0,
     volume: 0,

@@ -3,25 +3,31 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import * as moment from "moment";
+import { ConfigService } from './config.service';
 import { StreamState } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AudioService {
+
+  constructor(private config: ConfigService) {
+    this.audioObject.volume = this.state.volume;
+  }
+
   private state: StreamState = {
     playing: false,
-    readableCurrentTime: '',
-    readableDuration: '',
     duration: undefined,
     currentTime: undefined,
-    volume: 0.25,
+    volume: this.config.volume,
     canplay: false,
     error: false,
   };
+
   private stop$ = new Subject();
+
   private audioObject = new Audio();
+
   audioEvents = [
     "ended",
     "error",
@@ -33,19 +39,15 @@ export class AudioService {
     "loadedmetadata",
     "loadstart"
   ];
+
   private stateChange: BehaviorSubject<StreamState> = new BehaviorSubject(
     this.state
   );
-
-  constructor() {
-    this.audioObject.volume = this.state.volume;
-  }
 
   private updateStateEvents(event: Event): void {
     switch (event.type) {
       case "canplay":
         this.state.duration = this.audioObject.duration;
-        this.state.readableDuration = this.formatTime(this.state.duration);
         this.state.canplay = true;
         break;
       case "playing":
@@ -56,9 +58,6 @@ export class AudioService {
         break;
       case "timeupdate":
         this.state.currentTime = this.audioObject.currentTime;
-        this.state.readableCurrentTime = this.formatTime(
-          this.state.currentTime
-        );
         break;
       case "error":
         this.resetState();
@@ -71,8 +70,6 @@ export class AudioService {
   private resetState() {
     this.state = {
       playing: false,
-      readableCurrentTime: '',
-      readableDuration: '',
       duration: undefined,
       currentTime: undefined,
       volume: this.state.volume,
@@ -146,8 +143,4 @@ export class AudioService {
     this.audioObject.volume = volume;
   }
 
-  formatTime(time: number, format: string = "m:ss") {
-    const momentTime = time * 1000;
-    return moment.utc(momentTime).format(format);
-  }
 }
