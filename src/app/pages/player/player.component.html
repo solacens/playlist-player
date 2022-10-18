@@ -1,6 +1,6 @@
 <div class="container">
   <mat-toolbar color="primary" class="main-toolbar">
-    <span class="pointer" [routerLink]="['']">{{ playlist.details.name }}</span>
+    <span class="pointer" [routerLink]="['']">{{ title }}</span>
     <span class="flex-expand"></span>
     <button mat-button (click)="updatePlaylist()" matTooltip="Update">
       <mat-icon>refresh</mat-icon>
@@ -8,7 +8,8 @@
   </mat-toolbar>
   <div class="video-list">
     <mat-list color="primary">
-      <mat-list-item class="pointer" *ngFor="let video of playlist.videos; let i = index">
+      <mat-list-item [class]="classIsPlaying(i)" *ngFor="let video of playlist.videos; let i = index"
+        (click)="loadSong(i)">
         <span><img [src]="video.thumbnail" /></span>
         <span>
           <h3 mat-line>{{ video.name }}</h3>
@@ -21,19 +22,18 @@
   <div class="media-footer">
     <mat-toolbar color="primary">
       <mat-toolbar-row>
-        <!-- {{ state?.readableCurrentTime }} -->
-        <!-- <mat-slider class="time-slider" min="0" [max]="state?.duration" step="1" [value]="state?.currentTime"
-          (input)="onSliderChangeEnd($event)" [disabled]="state?.error || currentFile.index === undefined"></mat-slider> -->
-        <!-- {{ state?.readableDuration }} -->
+        <mat-slider class="time-slider" min="0" [max]="state.duration" step="1" [value]="state.currentTime"
+          (input)="onSliderChangeEnd($event)"></mat-slider>
+        {{ state.currentTime | convertTime }}/{{ state.duration | convertTime }}
       </mat-toolbar-row>
       <mat-toolbar-row class="media-action-bar">
         <button mat-button [disabled]="isFirstPlaying()" (click)="previous()">
           <mat-icon mat-list-icon>skip_previous</mat-icon>
         </button>
-        <button mat-button (click)="play()">
+        <button mat-button (click)="play()" [disabled]="state.error" *ngIf="!state?.playing">
           <mat-icon mat-list-icon>play_circle_filled</mat-icon>
         </button>
-        <button mat-button (click)="pause()">
+        <button mat-button (click)="pause()" *ngIf="state?.playing">
           <mat-icon mat-list-icon>pause</mat-icon>
         </button>
         <button mat-button [disabled]="isLastPlaying()" (click)="next()">

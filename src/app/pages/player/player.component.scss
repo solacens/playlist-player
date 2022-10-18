@@ -14,6 +14,10 @@
       h3 {
         margin-bottom: 0;
       }
+
+      &.playing {
+        background-color: rgba($color: #777777, $alpha: 0.3);
+      }
     }
   }
 }

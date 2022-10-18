@@ -11,12 +11,11 @@ const THRESHOLD_90D = 98.0;
 @Injectable({
   providedIn: 'root'
 })
-
 export class RequestService {
 
   constructor(private config: ConfigService) { }
 
-  serverList = new Observable<string>(observer => {
+  server = new Observable<string>(observer => {
     if (this.config.preferredSource) {
       observer.next(this.config.preferredSource);
       observer.complete();
@@ -40,7 +39,7 @@ export class RequestService {
 
   getPlaylist(id: string, forceUpdate: boolean = false): Observable<Playlist> {
     return new Observable<any>(observer => {
-      this.serverList.subscribe(serverBaseUri => {
+      this.server.subscribe(serverBaseUri => {
         const cache = this.config.getPlaylistCache(id);
         if (cache.details.id == id && !forceUpdate) {
           observer.next(cache);
@@ -98,6 +97,7 @@ export class RequestService {
               const playlistVideo: PlaylistVideo = {
                 name: y.title,
                 id: y.videoId,
+                url: `https://${this.config.preferredSource}/embed/${y.videoId}`,
                 author: y.author,
                 length: y.lengthSeconds,
                 thumbnail: y.videoThumbnails.filter((z: any) => z.quality == 'default')[0].url
@@ -113,6 +113,7 @@ export class RequestService {
             const playlistVideo: PlaylistVideo = {
               name: raw.title,
               id: raw.videoId,
+              url: `https://${this.config.preferredSource}/embed/${raw.videoId}`,
               author: raw.author,
               length: raw.lengthSeconds,
               thumbnail: raw.videoThumbnails.filter((z: any) => z.quality == 'default')[0].url
@@ -139,4 +140,29 @@ export class RequestService {
     );
   }
 
+  resolveVideoId(videoId: string): Observable<string> {
+
+    return new Observable<string>(observer => {
+      this.server.subscribe(serverBaseUri => {
+        axios.get(`https://${serverBaseUri}/api/v1/videos/${videoId}`)
+          .then((response) => {
+            const videoData = response.data
+
+            const bestM4aFormat = videoData.adaptiveFormats
+              .filter((x: any) => x.container == "m4a")
+              .reduce((acc: any, x: any) => {
+                return acc.audioSampleRate < x.audioSampleRate ? acc : x;
+              })
+
+            const serverReplacedUrl = bestM4aFormat.url.replace(/^https:\/\/[^\/]+\/(.+)$/, `https://${serverBaseUri}/$1`)
+
+            observer.next(serverReplacedUrl);
+            observer.complete();
+          })
+          .catch((error) => {
+            observer.error(error);
+          });
+      });
+    });
+  }
 }

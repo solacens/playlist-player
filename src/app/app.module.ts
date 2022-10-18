@@ -8,13 +8,15 @@ import { MaterialModule } from './material.module';
 
 import { PlaylistComponent, DialogAddPlaylistComponent } from './pages/playlist/playlist.component';
 import { PlayerComponent } from './pages/player/player.component';
+import { ConvertTime } from './pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlaylistComponent,
     DialogAddPlaylistComponent,
-    PlayerComponent
+    PlayerComponent,
+    ConvertTime
   ],
   imports: [
     BrowserModule,
